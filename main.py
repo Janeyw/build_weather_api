@@ -1,7 +1,7 @@
 from flask import Flask, render_template
 import pandas as pd
 
-app = Flask(__name__")
+app = Flask(__name__)
 
 @app.route("/")
 def home():
@@ -9,18 +9,20 @@ def home():
 
 # values in < > is from user input, then the input of the function
 @app.route("/api/v1/<station>/<date>")
-def about(station,date):
-    # df = pd.read_csv()
-    temperature = 23
+def api(station,date):
+    filename = "data_small/TG_STAID" + str(station).zfill(6) + ".txt"
+    df = pd.read_csv(filename, skiprows=20,parse_dates=["    DATE"])
+
+    print(df)
+
+    temperature = df.loc[df["    DATE"]==date]["   TG"].squeeze()/10
+    print(temperature)
     return {"station":station,
              "date":date,
             "temperature":temperature
             }
 
 
-@app.route("/contact-us/")
-def contact_us():
-    return render_template("contact_us.html")
 
-if __name__ == "__main__"
+if __name__ == "__main__":
     app.run(debug=True)
